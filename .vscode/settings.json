@@ -1,0 +1,11 @@
+{
+  "cSpell.words": ["isbang", "mkcert", "mkdir", "robinraju"],
+  "search.exclude": {
+    ".dccache": true,
+    ".history": true
+  },
+  "files.exclude": {
+    ".dccache": true,
+    ".history": true
+  }
+}

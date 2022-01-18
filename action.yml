@@ -1,0 +1,91 @@
+# Copyright 2022 Qlever LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: "OADA server"
+
+description: "Action to launch an OADA server and cleanup afterward"
+
+inputs:
+  version:
+    description: "version of OADA server to run"
+    required: false
+    default: latest
+  working-directory:
+    description: "working directory to use"
+    required: false
+    default: "oada/server"
+
+runs:
+  using: "composite"
+  steps:
+    # Make our directory
+    - shell: bash
+      run: mkdir -p "${{ inputs.working-directory }}"
+
+    # Download lastest server
+    - uses: robinraju/release-downloader@v1.3
+      if: ${{ inputs.version == 'latest' }}
+      working-directory: ${{ inputs.working-directory }}
+      with:
+        repository: "OADA/server"
+        latest: true
+        fileName: "docker-compose.yml"
+    # Download specific server version
+    - uses: robinraju/release-downloader@v1.3
+      if: ${{ inputs.version != 'latest' }}
+      working-directory: ${{ inputs.working-directory }}
+      with:
+        repository: "OADA/server"
+        tag: ${{ $inputs.version }}
+        fileName: "docker-compose.yml"
+
+    # Create server certs
+    - uses: robinraju/release-downloader@v1.3
+      working-directory: ${{ inputs.working-directory }}
+      with:
+        repository: "FiloSottile/mkcert"
+        tag: v1.4.3
+        fileName: "mkcert-v1.4.3-linux-amd64"
+    - shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: mkcert-v1.4.3-linux-amd64 --install
+    - shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: mkdir certs
+    - shell: bash
+      working-directory: ${{ inputs.working-directory }}/certs
+      run: |
+        mkcert-v1.4.3-linux-amd64 \
+        -cert-fie fullchain.pem \
+        -key-file privKey.pem \
+        localhost
+
+    # Override certs
+    - shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        OVERRIDES: |
+          services:
+            proxy:
+              volumes:
+                - ./certs:/config/keys/letsencrypt:ro
+      run: echo ${OVERRIDES} > docker-compose.override.yml
+
+    # Start the server locally
+    - uses: isbang/compose-action@v1.0.0
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        DOMAIN: localhost
+      with:
+        down-flags: "--volumes"
