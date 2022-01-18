@@ -21,22 +21,13 @@ inputs:
     description: "version of OADA server to run"
     required: false
     default: latest
-  working-directory:
-    description: "working directory to use"
-    required: false
-    default: "oada/server"
 
 runs:
   using: "composite"
   steps:
-    # Make our directory
-    - shell: bash
-      run: mkdir -p "${{ inputs.working-directory }}"
-
     # Download lastest server
     - uses: robinraju/release-downloader@v1.3
       if: ${{ inputs.version == 'latest' }}
-      working-directory: ${{ inputs.working-directory }}
       with:
         repository: "OADA/server"
         latest: true
@@ -44,7 +35,6 @@ runs:
     # Download specific server version
     - uses: robinraju/release-downloader@v1.3
       if: ${{ inputs.version != 'latest' }}
-      working-directory: ${{ inputs.working-directory }}
       with:
         repository: "OADA/server"
         tag: ${{ $inputs.version }}
@@ -52,19 +42,15 @@ runs:
 
     # Create server certs
     - uses: robinraju/release-downloader@v1.3
-      working-directory: ${{ inputs.working-directory }}
       with:
         repository: "FiloSottile/mkcert"
         tag: v1.4.3
         fileName: "mkcert-v1.4.3-linux-amd64"
     - shell: bash
-      working-directory: ${{ inputs.working-directory }}
       run: mkcert-v1.4.3-linux-amd64 --install
     - shell: bash
-      working-directory: ${{ inputs.working-directory }}
       run: mkdir certs
     - shell: bash
-      working-directory: ${{ inputs.working-directory }}/certs
       run: |
         mkcert-v1.4.3-linux-amd64 \
         -cert-fie fullchain.pem \
@@ -73,7 +59,6 @@ runs:
 
     # Override certs
     - shell: bash
-      working-directory: ${{ inputs.working-directory }}
       env:
         OVERRIDES: |
           services:
@@ -84,7 +69,6 @@ runs:
 
     # Start the server locally
     - uses: isbang/compose-action@v1.0.0
-      working-directory: ${{ inputs.working-directory }}
       env:
         DOMAIN: localhost
       with:
