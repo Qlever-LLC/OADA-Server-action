@@ -55,7 +55,7 @@ runs:
     - shell: bash
       run: |
         ./mkcert-v1.4.3-linux-amd64 \
-        -cert-fie fullchain.pem \
+        -cert-file fullchain.pem \
         -key-file privKey.pem \
         localhost
 
