@@ -24,6 +24,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
 
+      - name: Debug OADA env
+        shell: bash
+        run: docker-compose config
+
       # Attempt to start a server
       - uses: ./
         with:
@@ -36,4 +40,4 @@ jobs:
           headers: '{"Authorization": "Bearer god"}'
           expected-status: 200
           interval: 10
-          timeout: 5 * 60
+          timeout: 300
