@@ -47,7 +47,7 @@ runs:
         tag: v1.4.3
         fileName: "mkcert-v1.4.3-linux-amd64"
     - shell: bash
-      run: ./mkcert-v1.4.3-linux-amd64 --install
+      run: sudo ./mkcert-v1.4.3-linux-amd64 --install
     - shell: bash
       run: mkdir certs
     - shell: bash
