@@ -21,8 +21,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
       # Attempt to start a server
-      - uses: ${{ github.repository }}@${{ github.sha }}
+      - uses: ./
         env:
           PORT: 3000
 
