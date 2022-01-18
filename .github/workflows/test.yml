@@ -26,8 +26,6 @@ jobs:
 
       # Attempt to start a server
       - uses: ./
-        with:
-          port: 3000
 
       - name: Debug OADA
         continue-on-error: true
@@ -37,7 +35,7 @@ jobs:
       # See if it worked
       - uses: mydea/action-wait-for-api@v1
         with:
-          url: "https://localhost:3000/bookmarks"
+          url: "https://oada/bookmarks"
           headers: '{"Authorization": "Bearer god"}'
           expected-status: 200
           interval: 10

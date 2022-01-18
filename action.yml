@@ -67,8 +67,18 @@ runs:
     - shell: bash
       env:
         OVERRIDES: |
+          networks:
+            job:
+              external: true
+              name: ${{ job.container.network }}
           services:
             proxy:
+              expose:
+                - '443'
+              networks:
+                job:
+                  aliases:
+                    - oada
               volumes:
                 - ./certs:/config/keys/letsencrypt:ro
       run: echo ${OVERRIDES} > docker-compose.override.yml
