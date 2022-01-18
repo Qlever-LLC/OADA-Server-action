@@ -24,14 +24,14 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
 
-      - name: Debug OADA env
-        shell: bash
-        run: docker-compose config
-
       # Attempt to start a server
       - uses: ./
         with:
           port: 3000
+
+      - name: Debug OADA env
+        shell: bash
+        run: docker-compose config
 
       # See if it worked
       - uses: mydea/action-wait-for-api@v1
