@@ -28,7 +28,7 @@ jobs:
       - uses: ./
         env:
           DEBUG: '*'
-          PORT: 3000
+          PORT_HTTPS: 3000
 
       # See if it worked
       - uses: mydea/action-wait-for-api@v1
