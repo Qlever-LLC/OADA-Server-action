@@ -27,10 +27,14 @@ jobs:
       # Attempt to start a server
       - uses: ./
         env:
+          DEBUG: '*'
           PORT: 3000
 
       # See if it worked
-      - shell: bash
-        run: |
-          curl -v -H "Authorization: Bearer god" https://localhost:3000/bookmarks
-
+      - uses: mydea/action-wait-for-api@v1
+        with:
+          url: "https://localhost:3000/bookmarks"
+          headers: '{"Authorization": "Bearer god"}'
+          expected-status: 200
+          interval: 10
+          timeout: 5 * 60
