@@ -29,6 +29,11 @@ jobs:
         with:
           port: 3000
 
+      - name: Debug OADA
+        continue-on-error: true
+        shell: bash
+        run: docker ps
+
       # See if it worked
       - uses: mydea/action-wait-for-api@v1
         with:
