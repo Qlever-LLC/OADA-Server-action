@@ -37,7 +37,7 @@ runs:
       if: ${{ inputs.version != 'latest' }}
       with:
         repository: "OADA/server"
-        tag: ${{ $inputs.version }}
+        tag: ${{ inputs.version }}
         fileName: "docker-compose.yml"
 
     # Create server certs
