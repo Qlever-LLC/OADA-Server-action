@@ -21,6 +21,10 @@ inputs:
     description: "version of OADA server to run"
     required: false
     default: latest
+  port:
+    description: "HTTPS port to use"
+    required: false
+    default: '443'
 
 runs:
   using: "composite"
@@ -68,6 +72,12 @@ runs:
               volumes:
                 - ./certs:/config/keys/letsencrypt:ro
       run: echo ${OVERRIDES} > docker-compose.override.yml
+
+    # Set environment variables for OADA
+    - shell: bash
+      run: |
+        echo "DOMAIN=localhost" > .env
+        echo "PORT_HTTPS=${{ inputs.port }}" >> .env
 
     # Start the server locally
     - uses: isbang/compose-action@v1.0.0
