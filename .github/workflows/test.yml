@@ -26,9 +26,8 @@ jobs:
 
       # Attempt to start a server
       - uses: ./
-        env:
-          DEBUG: '*'
-          PORT_HTTPS: 3000
+        with:
+          port: 3000
 
       # See if it worked
       - uses: mydea/action-wait-for-api@v1
