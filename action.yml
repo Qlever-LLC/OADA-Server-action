@@ -47,12 +47,12 @@ runs:
         tag: v1.4.3
         fileName: "mkcert-v1.4.3-linux-amd64"
     - shell: bash
-      run: mkcert-v1.4.3-linux-amd64 --install
+      run: ./mkcert-v1.4.3-linux-amd64 --install
     - shell: bash
       run: mkdir certs
     - shell: bash
       run: |
-        mkcert-v1.4.3-linux-amd64 \
+        ./mkcert-v1.4.3-linux-amd64 \
         -cert-fie fullchain.pem \
         -key-file privKey.pem \
         localhost
