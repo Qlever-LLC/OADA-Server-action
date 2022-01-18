@@ -61,7 +61,7 @@ runs:
         ./mkcert-v1.4.3-linux-amd64 \
         -cert-file fullchain.pem \
         -key-file privKey.pem \
-        localhost
+        oada oada.local
 
     # Override certs
     - shell: bash
@@ -86,12 +86,10 @@ runs:
     # Set environment variables for OADA
     - shell: bash
       run: |
-        echo "DOMAIN=localhost" > .env
+        echo "DOMAIN=oada.local" > .env
         echo "PORT_HTTPS=${{ inputs.port }}" >> .env
 
     # Start the server locally
     - uses: isbang/compose-action@v1.0.0
-      env:
-        DOMAIN: localhost
       with:
         down-flags: "--volumes"
