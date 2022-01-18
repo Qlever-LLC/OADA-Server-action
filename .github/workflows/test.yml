@@ -29,10 +29,6 @@ jobs:
         with:
           port: 3000
 
-      - name: Debug OADA env
-        shell: bash
-        run: docker-compose config
-
       # See if it worked
       - uses: mydea/action-wait-for-api@v1
         with:
